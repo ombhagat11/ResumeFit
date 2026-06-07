@@ -1,13 +1,10 @@
+require('dotenv').config();
 const app = require('./src/app');
-require("dotenv").config();
 const connectToDB = require('./src/config/database');
-const { resume, selfDescription, jobDescription } = require('./src/services/temp');
-const { generateResumeReport } = require('./src/services/ai.service');
+
+const PORT = process.env.PORT || 3000;
+
 connectToDB();
-
-
-generateResumeReport(resume, selfDescription, jobDescription);
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, () => {
+  console.log(`ResumeFit API is running on port ${PORT}`);
 });
