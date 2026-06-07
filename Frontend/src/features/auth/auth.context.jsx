@@ -1,32 +1,27 @@
-import {createContext, useState, useEffect} from 'react';
-import {getMe} from "./services/auth.api.js"
+import { createContext, useEffect, useState } from 'react';
+import { getMe } from './services/auth.api.js';
 
 export const AuthContext = createContext();
 
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export const AuthProvider = ({children}) =>{
+  useEffect(() => {
+    let mounted = true;
+    async function hydrate() {
+      try {
+        const data = await getMe();
+        if (mounted && data?.user) setUser(data.user);
+      } catch {
+        if (mounted) setUser(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    hydrate();
+    return () => { mounted = false; };
+  }, []);
 
-
-
-            const [user,setUser] = useState(null);
-            const [loading,setLoading] = useState(true);
-            useEffect(() => {
-                const getAndSetUser = async () => {
-                    try {
-                        const data = await getMe();
-                        if (data && data.user) {
-                            setUser(data.user);
-                        }
-                    } catch (error) {
-                        console.log('Failed to fetch user:', error);
-                    } finally {
-                        setLoading(false);
-                    }
-                }
-                getAndSetUser();
-            }, []);
-
-            return (
-                <AuthContext.Provider value={{user, setUser, loading, setLoading}}><>{children}</></AuthContext.Provider>
-            )
-}
+  return <AuthContext.Provider value={{ user, setUser, loading, setLoading }}>{children}</AuthContext.Provider>;
+};
