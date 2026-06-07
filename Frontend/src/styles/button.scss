@@ -1,0 +1,18 @@
+ .button{
+    background-color: #282626;
+    color: whitesmoke;
+    border: 1px solid whitesmoke;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+    &.primary-button{
+        background-color: #ff1e69;
+        border: none;
+        color: whitesmoke;
+    }
+    &:active{
+        transform: scale(0.98);
+    }
+ }
